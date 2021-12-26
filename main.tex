@@ -3,12 +3,13 @@
 \usepackage[spanish]{babel}
 \usepackage{graphicx}
 \usepackage{url}
+\usepackage{ragged2e}
 
 
 
 \begin{document}
 
-\begin{titlepage}
+\begin{titlepage}    
 \centering
 {\bfseries\LARGE MEMORIA PRÁCTICA 3: Monitorización, Automatización y "Profiling". \par}
 \vspace{9.5cm}
@@ -24,8 +25,14 @@
 \newpage
 \tableofcontents
 
-\raggedright
+\flushleft
+
 \newpage
+\section{\Large Introducción}
+\begin{justify}
+{En esta memoria de la práctica 3 veremos como instalar zabbix, que es un software que permite monitorizar nuestro servidor en este caso, y como configurarlo para que monitorice también los  servicios ssh y httpd. \par
+Además veremos también como instalar ansible (software que sirve para ejecutar un script, por ejemplo, en varias máquinas. En nuestro caso utilizaremos el script creado en la guía de la práctica 3).}
+\end{justify}
 \section{\Large Zabbix}
 \subsection{Instalación de Zabbix en UBUNTU}
 {Para empezar nos iremos a la página  oficial de zabbix: \par}
@@ -33,11 +40,156 @@
 \vspace{0.2cm}
 {\par Una vez allí seguimos los pasos que nos dice la página para poder instalar Zabbix. \par}
 \subsubsection{Instalar repositorios de zabbix}
-
+\includegraphics[scale=0.4]{imagenesEjercicioZabbix/1.PNG}
+\subsubsection{Instalar el server de zabbix, frontend y agente}
+\includegraphics[scale=0.43]{imagenesEjercicioZabbix/2.PNG}
+\subsubsection{Crear una base de datos inicial}
+\includegraphics[scale=0.4]{imagenesEjercicioZabbix/3.PNG}
+{\par En el host del servidor Zabbix, importar el esquema y los datos iniciales. Nos pedirá que ingresemos la contraseña recién creada.}
+\includegraphics[scale=0.4]{imagenesEjercicioZabbix/4.PNG}
+\subsubsection{Configurar la base de datos para un server de zabbix}
+\includegraphics[scale=0.4]{imagenesEjercicioZabbix/5.PNG}
+{\par Descomentar donde pone \textit{DBPassword} y poner la contraseña deseada. \par}
+\includegraphics[scale=0.4]{imagenesEjercicioZabbix/6.PNG}
+\subsubsection{Configurar php para el frontend de zabbix}
+{\par Editar el archivo \textit{/etc/zabbix/apache.conf}, descomentar y establecer la zona horaria adecuada para usted. \par}
+\includegraphics[scale=0.4]{imagenesEjercicioZabbix/7.PNG}
+\includegraphics[scale=0.4]{imagenesEjercicioZabbix/8.PNG}
+\subsubsection{Iniciar el server de zabbix y el agente}
+\includegraphics[scale=0.4]{imagenesEjercicioZabbix/9.PNG}
 
 \newpage
+
+\subsection{Instalación de zabbix en centOS}
+{Para ello, tal y como hemos hecho en la instalación en UBUNTU nos vamos a la página de zabbix pero esta vez seleccionamos instalar en centOS y realizamos el primer paso solo, lo demás será diferente porque nuestro objetivo es monitorizar centOS desde UBUNTU. \par}
+\subsubsection{Instalar repositorio de zabbix}
+\includegraphics[scale=0.4]{imagenesEjercicioZabbixCentOS/1.PNG}
+\subsubsection{Instalamos el agente de zabbix}
+\includegraphics[scale=0.5]{imagenesEjercicioZabbixCentOS/2.PNG}
+\subsubsection{Configuramos el agente de zabbix}
+{Editamos el archivo \textit{/etc/zabbix/zabbix-agentd.conf} y establecemos los valores de la maquina host que en este caso es UBUNTU. \par}
+\includegraphics[scale=0.5]{imagenesEjercicioZabbixCentOS/6.PNG}
+\includegraphics[scale=0.5]{imagenesEjercicioZabbixCentOS/3.PNG}
+\includegraphics[scale=0.5]{imagenesEjercicioZabbixCentOS/4.PNG}
+\includegraphics[scale=0.5]{imagenesEjercicioZabbixCentOS/5.PNG}
+\subsubsection{Activamos el agente de zabbix}
+\includegraphics[scale=0.5]{imagenesEjercicioZabbixCentOS/7.PNG}
+\subsubsection{Habilitamos el puerto de zabbix de manera permanente}
+{Por defecto el puerto de zabbix es el 10050. \par}
+\includegraphics[scale=0.6]{imagenesEjercicioZabbixCentOS/8.PNG}
+
+\newpage
+
+\subsection{Configuración de zabbix (UBUNTU)}
+\subsubsection{Instalación desde el navegador} 
+{Para configurar e instalar ponemos en el navegador de google \textit{192.168.56.105/zabbix} y se nos abrirá una interfaz para realizar este proceso de configuración. \par}
+\includegraphics[scale=0.4]{interfazUBUNTU/1.PNG}
+{Pulsamos \textit{Next step} hasta llegar a \textit{configure DB connection} donde nos pedirá la contraseña que hemos configurado antes para la base de datos y la introducimos para poder continuar. \par}
+\includegraphics[scale=0.4]{interfazUBUNTU/2.PNG}
+\newpage
+{Le damos a \textit{next step} hasta el final y pulsamos \textit{finish} y la configuración en UBUNTU estará terminada e instalada. \par}
+\includegraphics[scale=0.4]{interfazUBUNTU/3.PNG}
+{\par Ahora nos pedirá ingresar un usuario y una contraseña, el usuario por defecto es \textbf{Admin} y la contraseña \textbf{zabbix} y ya nos dejará monitorizar. \par}
+\includegraphics[scale=0.4]{interfazUBUNTU/4.PNG}
+\newpage
+\subsubsection{Creación del host centOS}
+{Para ello nos vamos a \textit{configuración; hosts; crear host} y ponemos los datos. \par}
+\includegraphics[scale=0.4]{interfazUBUNTU/5.PNG}
+{Le damos a \textit{add} y ya tenemos añadido a centOS monitorizado también.}
+\subsubsection{Monitorización de ssh y httpd en UBUNTU}
+{Para ello nos vamos a \textit{Monitoring; hosts;} \par}
+\includegraphics[scale=0.4]{interfazUBUNTU/6.PNG}
+{\par \textit{Zabbix server; configuración;} \par}
+\includegraphics[scale=0.4]{interfazUBUNTU/7.PNG}
+\includegraphics[scale=0.4]{interfazUBUNTU/8.PNG}
+{\par \textit{Templates;} \par} 
+\includegraphics[scale=0.4]{interfazUBUNTU/9.PNG}
+{\par Añadimos los \textit{templates} que vienen proporcionados por zabbix para \textit{ssh} y \textit{apache2 httpd} y ya estariamos monitorizando estos servicios.}
+\includegraphics[scale=0.4]{interfazUBUNTU/10.PNG}
+\includegraphics[scale=0.4]{interfazUBUNTU/11.PNG}
+\newpage
+\subsubsection{Monitorización de ssh y httpd en centOS}
+{Con centOS seguimos los mismos pasos que en el anterior. \par}
+{Así quedaría zabbix después de  configurarlo todo tanto centOS como en UBUNTU. \par}
+\includegraphics[scale=0.4]{interfazUBUNTU/12.PNG}
+{ \par Como podemos observar monitoriza todo correctamente.}
+\newpage
+\subsection{Errores y referencias}
+\subsubsection{Errores}
+\begin{justify}
+{\par El único error que he tenido ha sido que en el paso de la instalación de zabbix de crear una base de datos inicial no me dejaba acceder la interfaz de \textit{mysql} y era porque no tenía la pila \textit{LAMP} instalada previamente así que la instalé como en la práctica 2 y he podido continuar con el ejercicio.}
+\end{justify}
+\subsubsection{Referencias}
+{Para la instalación en UBUNTU: \url{https://www.zabbix.com/download?zabbix=5.0&os_distribution=ubuntu&os_version=20.04_focal&db=mysql&ws=apache} \par} 
+{Para la instalación en centOS: \url{https://www.zabbix.com/download?zabbix=5.0&os_distribution=centos&os_version=8&db=mysql&ws=apache} \par}
+{Para monitorizar \textit{ssh} y \textit{httpd}:
+\url{https://techexpert.tips/es/zabbix-es/zabbix-monitoreo-de-apache/}}
+
+\newpage
+
 \section{\Large Ansible}
+\subsection{Instalación de ansible en UBUNTU}
+{Para ello ponemos en la terminal: \par}
+\includegraphics[scale=0.4]{UBUNTUansible/1.PNG}
+\subsection{Generación de la llave pública}
+\begin{justify}
+{Para generar una llave pública que proximamente copiaremos en la máquina centOS, escribiremos en la terminal \textit{sudo ssh-keygen}. \par}
+{La terminal nos pedirá si queremos cambiar la dirección donde se generará la llave, nosotros le daremos a enter porque queremos la dirección por defecto. \par}
+{Por último nos pedirá si le queremos poner contraseña, nosotros pulsaremos \textit{enter} porque no queremos asignarle ninguna contraseña. \par}
+{Una vez pulsemos \textit{enter} a todo ya tendremos la llave generada.}
+\end{justify}
+\includegraphics[scale=0.4]{UBUNTUansible/2.PNG}
+\vspace{0.04cm}
+{\par Una vez creada la llave, comprobamos si se ha generado bien con \textit{ls -la .ssh/}.}
+\begin{justify}
+{\par Para terminar copiamos la llave pública en la máquina centOS con \textit{ssh-copy-id 192.168.56.110 -p 22022}.\par}
+\includegraphics[scale=0.4]{UBUNTUansible/3.PNG}
+\end{justify}
+\subsection{Configuración de Ansible}
+\begin{justify}
+{Primero editamos el fichero \textit{ansible.cfg} poniendo en la terminal \textit{sudo vi /etc/ansible/ansible.cfg} y cambiamos \textit{\#remote\_port=22} por \textit{remote\_port=22022} quedando el fichero de esta manera. \par}
+\end{justify}
+\includegraphics[scale=0.4]{UBUNTUansible/5.PNG}
+\begin{justify}
+{\par Ahora vamos a editar el fichero \textit{hosts}, accedemos a él con sudo \textit{vi /etc/ansible/hosts}, una vez dentro del fichero donde pone \textit{ungrouped host} ponemos debajo la ip de centOS es decir, 192.168.56.110.\par}
+\end{justify}
+\includegraphics[scale=0.4]{UBUNTUansible/6.PNG}
+\begin{justify}
+{\par Una vez configurados los ficheros comprobamos que todo funciona bien con \textit{ansible all -m ping -u maagjj} y nos tiene que salir lo siguiente.}
+\end{justify}
+\includegraphics[scale=0.4]{UBUNTUansible/4.PNG}
+\begin{justify}
+{Un error que estaba cometiendo y que no me dejaba continuar con el ejercicio es que para comprobar que funcionaba correctamente en vez de comprobarlo con \textit{ansible all -m ping -u maagjj}, lo comprobaba con \textit{sudo ansible all -m ping -u maagjj}, el cuál me daba error y no sabía como arreglarlo. Lo he arreglado haciendo ping como lo he hecho en la explicación del ejercicio.}
+\end{justify}
+\includegraphics[scale=0.4]{UBUNTUansible/7.PNG}
+\subsection{Ejecución de un script}
+\begin{justify}
+{Para ello vamos a programar un script en python que nos dirá si los \textit{raids} están funcionando correctamente.}
+\end{justify}
+\includegraphics[scale=0.4]{UBUNTUansible/8.PNG}
+{Este script se llamará \textbf{monraid.py}.}
+\begin{justify}
+{\par Antes de nada, para ejecutar el script mediante ansible, tenemos que pasarle ese script a centOS, esto lo haremos mediante la orden: 
+\par \textit{scp -P 22022 monraid.py maagjj@192.168.56.110:/home/maagjj/monraid.py}.}
+\end{justify}
+\includegraphics[scale=0.4]{UBUNTUansible/9.PNG}
+\begin{justify}
+{\par Una vez ya copiado el script en la máquina centOS ya si podemos pasar a ejecutarlo para ello ponemos en la terminal:  
+\par \textit{ansible all -a “python3 \~/monraid.py” -u maagjj}.}
+{\par A mi al principio me dió error porque no tenía instalado python en 
+centOS, pero lo solucioné instalándolo con \textit{sudo yum install python36}.}
+\end{justify}
+\includegraphics[scale=0.4]{UBUNTUansible/10.PNG}
+\begin{justify}
+{\par Ahora porque lo estamos haciendo solo con una máquina, pero el potencial de esto es que gracias a ansible podemos ejecutar por ejemplo este script en varias máquinas diferentes desde otra máquina en remoto}
+\end{justify}
+\subsection{Referencias}
+{Para la instalación de ansible y configuración(Al final del documento):
+\url{https://docs.google.com/document/d/1LEGT0WndO-uPpg_1nPdrA874hsT2_VnhT8xnAH5ylYA/edit?usp=sharing}}
+{\par Para el comando scp:
+\url{https://www.hostinger.es/tutoriales/comando-scp}}
 
-
+\subsection*{Aclaración}
+{\par Está memoria se ha realizado }
 
 \end{document}
